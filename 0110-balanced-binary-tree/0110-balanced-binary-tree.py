@@ -4,21 +4,25 @@
 #         self.val = val
 #         self.left = left
 #         self.right = right
+from typing import Optional
+
 class Solution:
-    
-    def height(self, root):
-        if not root:
-            return 0
-        return 1 + max(self.height(root.left), self.height(root.right))
-    
     def isBalanced(self, root: Optional[TreeNode]) -> bool:
-        if not root:
-            return True
         
-        left_height = self.height(root.left)
-        right_height = self.height(root.right)
+        def check(node):
+            if not node:
+                return 0   
+            
+            left = check(node.left)
+            if left == -1:
+                return -1  
+            
+            right = check(node.right)
+            if right == -1:
+                return -1   
+            if abs(left - right) > 1:
+                return -1   
+            
+            return 1 + max(left, right)  
         
-        if abs(left_height - right_height) > 1:
-            return False
-        
-        return self.isBalanced(root.left) and self.isBalanced(root.right)
+        return check(root) != -1
